@@ -7,6 +7,31 @@
       "type": "blank-container",
       "id": "root",
       "name": "root"
+    },
+    {
+      "type": "docker",
+      "specific": {
+        "repositoryUrl": "git@github.com:mcollina/cloudconf-kv.git",
+        "execute": {
+          "args": "-p 3000:3000 -e REDIS_HOST=__TARGETIP__ -d",
+          "exec": ""
+        },
+        "commit": "b8ffdce0dc4b1337adb805cac1883b2b1cc562db"
+      },
+      "id": "cloudb$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+      "name": "cloudb"
+    },
+    {
+      "type": "docker",
+      "specific": {
+        "name": "redis:2.8",
+        "execute": {
+          "args": "-p 6379:6379 -d",
+          "exec": ""
+        }
+      },
+      "id": "redis$redis_2.8",
+      "name": "redis"
     }
   ],
   "topology": {
@@ -16,8 +41,40 @@
         "containedBy": "root-16f4f95b",
         "containerDefinitionId": "root",
         "type": "blank-container",
-        "contains": [],
+        "contains": [
+          "cloudb-c31f912e$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+          "redis-b418a1b8$redis_2.8"
+        ],
         "specific": {}
+      },
+      "cloudb-c31f912e$b8ffdce0dc4b1337adb805cac1883b2b1cc562db": {
+        "id": "cloudb-c31f912e$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+        "containedBy": "root-16f4f95b",
+        "containerDefinitionId": "cloudb$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+        "type": "docker",
+        "contains": [],
+        "specific": {
+          "repositoryUrl": "git@github.com:mcollina/cloudconf-kv.git",
+          "execute": {
+            "args": "-p 3000:3000 -e REDIS_HOST=__TARGETIP__ -d",
+            "exec": ""
+          },
+          "commit": "b8ffdce0dc4b1337adb805cac1883b2b1cc562db"
+        }
+      },
+      "redis-b418a1b8$redis_2.8": {
+        "id": "redis-b418a1b8$redis_2.8",
+        "containedBy": "root-16f4f95b",
+        "containerDefinitionId": "redis$redis_2.8",
+        "type": "docker",
+        "contains": [],
+        "specific": {
+          "name": "redis:2.8",
+          "execute": {
+            "args": "-p 6379:6379 -d",
+            "exec": ""
+          }
+        }
       }
     },
     "name": "development"
