@@ -8,5 +8,10 @@ exports.id = '4e89e590-f5c7-4775-9e78-08a577763f4e';
 exports.topology = {
   development: {
     root: ['cloudb', 'redis']
+  },
+  aws: {
+    cloudbSg: {
+      cloudbAmi: ['cloudb', 'redis']
+    }
   }
 };

@@ -1,0 +1,177 @@
+{
+  "name": "cloudconf",
+  "namespace": "cloudconf",
+  "id": "4e89e590-f5c7-4775-9e78-08a577763f4e",
+  "containerDefinitions": [
+    {
+      "type": "aws-sg",
+      "specific": {
+        "GroupName": "webSg",
+        "Description": "Web security group",
+        "IpPermissions": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 3000,
+            "ToPort": 3000,
+            "IpRanges": [
+              {
+                "CidrIp": "0.0.0.0/0"
+              }
+            ]
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "IpRanges": [
+              {
+                "CidrIp": "0.0.0.0/0"
+              }
+            ]
+          }
+        ],
+        "IpPermissionsEgress": [
+          {
+            "IpProtocol": "-1",
+            "UserIdGroupPairs": [],
+            "IpRanges": [
+              {
+                "CidrIp": "0.0.0.0/0"
+              }
+            ]
+          }
+        ],
+        "Tags": []
+      },
+      "id": "cloudbSg",
+      "name": "cloudbSg"
+    },
+    {
+      "type": "aws-ami",
+      "name": "demo2",
+      "specific": {
+        "ImageId": "ami-4b90b27b"
+      },
+      "id": "cloudbAmi"
+    },
+    {
+      "type": "docker",
+      "specific": {
+        "repositoryUrl": "git@github.com:mcollina/cloudconf-kv.git",
+        "execute": {
+          "args": "-p 3000:3000 -e REDIS_HOST=__TARGETIP__ -d",
+          "exec": ""
+        },
+        "commit": "b8ffdce0dc4b1337adb805cac1883b2b1cc562db"
+      },
+      "id": "cloudb$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+      "name": "cloudb"
+    },
+    {
+      "type": "docker",
+      "specific": {
+        "name": "redis:2.8",
+        "execute": {
+          "args": "-p 6379:6379 -d",
+          "exec": ""
+        }
+      },
+      "id": "redis$redis_2.8",
+      "name": "redis"
+    }
+  ],
+  "topology": {
+    "containers": {
+      "cloudbSg-29709e6": {
+        "id": "cloudbSg-29709e6",
+        "containedBy": "cloudbSg-29709e6",
+        "containerDefinitionId": "cloudbSg",
+        "type": "aws-sg",
+        "contains": [
+          "cloudbAmi-3e2d818b"
+        ],
+        "specific": {
+          "GroupName": "webSg",
+          "Description": "Web security group",
+          "IpPermissions": [
+            {
+              "IpProtocol": "tcp",
+              "FromPort": 3000,
+              "ToPort": 3000,
+              "IpRanges": [
+                {
+                  "CidrIp": "0.0.0.0/0"
+                }
+              ]
+            },
+            {
+              "IpProtocol": "tcp",
+              "FromPort": 22,
+              "ToPort": 22,
+              "IpRanges": [
+                {
+                  "CidrIp": "0.0.0.0/0"
+                }
+              ]
+            }
+          ],
+          "IpPermissionsEgress": [
+            {
+              "IpProtocol": "-1",
+              "UserIdGroupPairs": [],
+              "IpRanges": [
+                {
+                  "CidrIp": "0.0.0.0/0"
+                }
+              ]
+            }
+          ],
+          "Tags": []
+        }
+      },
+      "cloudbAmi-3e2d818b": {
+        "id": "cloudbAmi-3e2d818b",
+        "containedBy": "cloudbSg-29709e6",
+        "containerDefinitionId": "cloudbAmi",
+        "type": "aws-ami",
+        "contains": [
+          "cloudb-1cf985e6$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+          "redis-6bfeb570$redis_2.8"
+        ],
+        "specific": {
+          "ImageId": "ami-4b90b27b"
+        }
+      },
+      "cloudb-1cf985e6$b8ffdce0dc4b1337adb805cac1883b2b1cc562db": {
+        "id": "cloudb-1cf985e6$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+        "containedBy": "cloudbAmi-3e2d818b",
+        "containerDefinitionId": "cloudb$b8ffdce0dc4b1337adb805cac1883b2b1cc562db",
+        "type": "docker",
+        "contains": [],
+        "specific": {
+          "repositoryUrl": "git@github.com:mcollina/cloudconf-kv.git",
+          "execute": {
+            "args": "-p 3000:3000 -e REDIS_HOST=__TARGETIP__ -d",
+            "exec": ""
+          },
+          "commit": "b8ffdce0dc4b1337adb805cac1883b2b1cc562db"
+        }
+      },
+      "redis-6bfeb570$redis_2.8": {
+        "id": "redis-6bfeb570$redis_2.8",
+        "containedBy": "cloudbAmi-3e2d818b",
+        "containerDefinitionId": "redis$redis_2.8",
+        "type": "docker",
+        "contains": [],
+        "specific": {
+          "name": "redis:2.8",
+          "execute": {
+            "args": "-p 6379:6379 -d",
+            "exec": ""
+          }
+        }
+      }
+    },
+    "name": "aws"
+  }
+}
