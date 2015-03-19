@@ -21,7 +21,6 @@ exports.cloudbSg = {
 
 exports.cloudbAmi = {
   type: 'aws-ami',
-  name: 'demo2',
   specific: {
     ImageId: 'ami-4b90b27b'
   }
